@@ -63,4 +63,16 @@ public class App {
             }
         }
     }
+
+        // Método para adicionar uma nova cidade
+    private static void acrescentarCidade(Grafo<String> grafo, Scanner scanner) {
+        System.out.println("Digite o nome da cidade a ser adicionada:");
+        String cidade = scanner.nextLine().trim();
+        Vertice<String> vertice = grafo.adicionarVertice(cidade);
+        if (vertice != null) {
+            System.out.println("Cidade '" + cidade + "' adicionada com sucesso.");
+        } else {
+            System.out.println("Cidade '" + cidade + "' já existe no grafo.");
+        }
+    }
 }
