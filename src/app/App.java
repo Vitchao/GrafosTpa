@@ -88,4 +88,8 @@ public class App {
         grafo.adicionarAresta(origem, destino, distancia);
         System.out.println("Rota de '" + origem + "' para '" + destino + "' com distância " + distancia + " adicionada com sucesso.");
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 61ae074a9de3e686942b26699007f97a59c9a772
