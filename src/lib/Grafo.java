@@ -79,6 +79,53 @@ public class Grafo <T> {
         return destinos;
     }
 
+    private Vertice<T> find(Map<Vertice<T>, Vertice<T>> parent, Vertice<T> vertice) {
+        if (parent.get(vertice) != vertice) {
+            parent.put(vertice, find(parent, parent.get(vertice)));
+        }
+        return parent.get(vertice);
+    }
+
+    private void union(Map<Vertice<T>, Vertice<T>> parent, Vertice<T> vertice1, Vertice<T> vertice2) {
+        Vertice<T> raiz1 = find(parent, vertice1);
+        Vertice<T> raiz2 = find(parent, vertice2);
+        parent.put(raiz1, raiz2);
+    }
+
+    public Grafo<T> calcularArvoreGeradoraMinima () {
+        // Ordenar as arestas pelo peso
+        Collections.sort(this.arestas, Comparator.comparing(Aresta::getPeso));
+
+        // Inicializar Union-Find
+        Map<Vertice<T>, Vertice<T>> parent = new HashMap<>();
+        for (Vertice<T> v : vertices) {
+            parent.put(v, v);
+        }
+
+        Grafo<T> arvoreGeradoraMinima = new Grafo<>();
+        float pesoTotal = 0;
+
+        // Adicionar arestas na árvore geradora mínima
+        for (Aresta aresta : this.arestas) {
+            Vertice<T> raizOrigem = this.find(parent, aresta.getOrigem());
+            Vertice<T> raizDestino = this.find(parent, aresta.getDestino());
+
+            if (!raizOrigem.equals(raizDestino)) {
+                arvoreGeradoraMinima.adicionarAresta(raizOrigem.getValor(), raizDestino.getValor(), aresta.getPeso());
+
+                pesoTotal += aresta.getPeso();
+                System.out.println(raizOrigem.getValor() + " -> " +
+                        raizDestino.getValor() + " : " +
+                        aresta.getPeso());
+
+                this.union(parent, raizOrigem, raizDestino);
+            }
+        }
+
+        System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
+        return arvoreGeradoraMinima;
+    }
+
     public void calcularCaminhoMinimo(T origem, T destino) {
         Vertice<T> origemVert = obterVertice(origem);
         Vertice<T> destinoVert = obterVertice(destino);

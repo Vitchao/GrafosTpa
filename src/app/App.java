@@ -133,4 +133,37 @@ public class App {
 
         grafo.calcularCaminhoMinimo(origem, destino);
     }
+
+    // Método para gravar o grafo em um arquivo
+    private static void gravarGrafoEmArquivo(Grafo<String> grafo, String nomeArquivo) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(nomeArquivo));
+
+            List<Vertice<String>> vertices = grafo.getVertices();
+            int n = vertices.size();
+            bw.write(n + "\n");
+
+            for (Vertice<String> vertice : vertices) {
+                bw.write(vertice.getValor() + "\n");
+            }
+
+            for (Vertice<String> vertice1 : vertices) {
+                StringBuilder linha = new StringBuilder();
+                for (Vertice<String> vertice2 : vertices) {
+                    Aresta aresta = grafo.obterAresta(vertice1, vertice2);
+                    if (aresta != null) {
+                        linha.append(aresta.getPeso());
+                    } else {
+                        linha.append("0");
+                    }
+                    linha.append(",");
+                }
+                bw.write(linha.deleteCharAt(linha.length() - 1).toString() + "\n");
+            }
+
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao gravar o arquivo: " + e.getMessage());
+        }
+    }
 }
