@@ -64,6 +64,41 @@ public class App {
         }
     }
 
+    // Método para carregar o grafo a partir de um arquivo
+    private static void carregarGrafoDeArquivo(Grafo<String> grafo, String nomeArquivo) {
+        try {
+            File arquivo = new File(nomeArquivo);
+            if (!arquivo.exists()) {
+                System.out.println("Arquivo '" + nomeArquivo + "' não encontrado. Um novo grafo será criado.");
+                return;
+            }
+
+            BufferedReader br = new BufferedReader(new FileReader(arquivo));
+            int n = Integer.parseInt(br.readLine().trim());
+
+            List<String> cidades = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                String cidade = br.readLine().trim();
+                cidades.add(cidade);
+                grafo.adicionarVertice(cidade);
+            }
+
+            for (int i = 0; i < n; i++) {
+                String[] distancias = br.readLine().split(",");
+                for (int j = 0; j < n; j++) {
+                    float distancia = Float.parseFloat(distancias[j].trim());
+                    if (distancia > 0) {
+                        grafo.adicionarAresta(cidades.get(i), cidades.get(j), distancia);
+                    }
+                }
+            }
+
+            br.close();
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
+        }
+    }
+
     // Método para adicionar uma nova cidade
     private static void acrescentarCidade(Grafo<String> grafo, Scanner scanner) {
         System.out.println("Digite o nome da cidade a ser adicionada:");
@@ -75,7 +110,7 @@ public class App {
             System.out.println("Cidade '" + cidade + "' já existe no grafo.");
         }
     }
-    
+
     // Método para adicionar uma nova rota
     private static void acrescentarRota(Grafo<String> grafo, Scanner scanner) {
         System.out.println("Digite o nome da cidade de origem:");
@@ -88,8 +123,14 @@ public class App {
         grafo.adicionarAresta(origem, destino, distancia);
         System.out.println("Rota de '" + origem + "' para '" + destino + "' com distância " + distancia + " adicionada com sucesso.");
     }
-<<<<<<< HEAD
+
+    // Método para calcular o caminho mínimo entre duas cidades
+    private static void calcularCaminhoMinimo(Grafo<String> grafo, Scanner scanner) {
+        System.out.println("Digite o nome da cidade de origem:");
+        String origem = scanner.nextLine().trim();
+        System.out.println("Digite o nome da cidade de destino:");
+        String destino = scanner.nextLine().trim();
+
+        grafo.calcularCaminhoMinimo(origem, destino);
+    }
 }
-=======
-}
->>>>>>> 61ae074a9de3e686942b26699007f97a59c9a772
