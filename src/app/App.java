@@ -1,0 +1,66 @@
+package app;
+
+import lib.*;
+import java.io.*;
+import java.util.*;
+
+public class App {
+    public static void main(String[] args) {
+        Grafo<String> grafo = new Grafo<>();
+        Grafo<String> agm = null; // Para armazenar a AGM
+        Scanner scanner = new Scanner(System.in);
+
+        // Verificar se o arquivo "entrada.txt" existe e carregar o grafo
+        carregarGrafoDeArquivo(grafo, "entrada.txt");
+
+        // Menu interativo
+        while (true) {
+            System.out.println("\nEscolha uma opção:");
+            System.out.println("1. Acrescentar cidade");
+            System.out.println("2. Acrescentar rota");
+            System.out.println("3. Calcular árvore geradora mínima (AGM)");
+            System.out.println("4. Calcular caminho mínimo entre duas cidades");
+            System.out.println("5. Calcular caminho mínimo entre duas cidades considerando apenas a AGM");
+            System.out.println("6. Gravar e Sair");
+
+            int opcao;
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (Exception e) {
+                opcao = -1;
+            }
+
+            switch (opcao) {
+                case 1:
+                    acrescentarCidade(grafo, scanner);
+                    break;
+                case 2:
+                    acrescentarRota(grafo, scanner);
+                    break;
+                case 3:
+                    agm = grafo.calcularArvoreGeradoraMinima();
+                    break;
+                case 4:
+                    calcularCaminhoMinimo(grafo, scanner);
+                    break;
+                case 5:
+                    if (agm == null) {
+                        agm = grafo.calcularArvoreGeradoraMinima();
+                    }
+                    calcularCaminhoMinimo(agm, scanner);
+                    break;
+                case 6:
+                    gravarGrafoEmArquivo(grafo, "grafoCompleto.txt");
+                    if (agm != null) {
+                        gravarGrafoEmArquivo(agm, "agm.txt");
+                    }
+                    System.out.println("Arquivos gravados e saindo...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+    }
+}
